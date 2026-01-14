@@ -39,6 +39,11 @@ module "bitwarden" {
   cluster_name     = module.eks.cluster_name
 
   tags = local.common_tags
+
+  depends_on = [
+    module.vpc,
+    module.eks
+  ]
 }
 
 # Bitwarden Secret Sync Modules
@@ -58,8 +63,9 @@ module "bitwarden_secrets" {
   tags = local.common_tags
 
   depends_on = [
-    module.bitwarden,
-    module.vpc
+    module.vpc,
+    module.eks,
+    module.bitwarden
   ]
 }
 
@@ -84,7 +90,8 @@ module "bitwarden_reader" {
   tags = local.common_tags
 
   depends_on = [
-    module.bitwarden_secrets,
-    module.vpc
+    module.vpc,
+    module.eks,
+    module.bitwarden_secrets
   ]
 }
